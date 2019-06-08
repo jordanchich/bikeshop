@@ -76,11 +76,18 @@
       <div class="col-8 col-sm-10 text-right">Total basket: </div>
       <div class="col-4 col-sm-2"><%=totalCmd%>€</div>
     </div>
-
     <div class="row" id="card-checkout">
-      <div class="col-12 text-right"><button type="button" class="btn btn-outline-info btn-sm" name="button">Checkout</button></div>
+      <div class="col-12 text-right checkoutbutton">
+        <form action="/checkout" method="POST">
+          <script src="https://checkout.stripe.com/checkout.js" class="stripe-button" data-key="pk_test_iMtcM1emrMwxMKF7JzUlL9ro" data-amount="<%=totalCmd * 100%>"
+            data-name="DirtBike" data-description="La Capsule" data-shipping-address="false" data-label="Payer ma commande"
+            data-image="http://localhost:3000/images/bike-logo.svg" data-locale="auto" data-currency="eur">
+            
+            </script>
+        </form>
+      </div>
     </div>
-
+    
   </div>
 </body>
 

@@ -1,8 +1,8 @@
 var express = require('express');
 var router = express.Router();
+var stripe = require('stripe')('sk_test_o9sWtAKD4rmPgv3xfgyNsPwX001kmUDFnO');
 // To install the session mecanism, we need to enter the cmd : npm install express-session --save
 // Then, we can verify that the process worked well in our file package.json (line 13)
-
 var dataBike = [
   {name: 'Model BIKO45', price: 679, url: '/images/bike-1.jpg'},
   {name: 'Model ZOOK7', price: 799, url: '/images/bike-2.jpg'},
@@ -21,6 +21,23 @@ router.get('/', function(req, res, next) {
     req.session.dataCardBike = [];
   }
   res.render('index', {dataBike});
+});
+
+/* GET home page. */
+router.post('/checkout', function (req, res, next) {
+  console.log(req.body)
+  var Panier = 0;
+  for (var i = 0; i < req.session.dataCardBike.length; i++) {
+    Panier = Panier + (req.session.dataCardBike[i].price * req.session.dataCardBike[i].quantity)
+  }
+  var token = req.body.stripeToken;
+  var charge =  stripe.charges.create({
+    amount: Panier * 100,
+    currency: 'eur',
+    description: 'Paiement la Capsule',
+    source: token,
+  });
+  res.render('done', { charge, Panier  });
 });
 
 /* POST shop page. */
